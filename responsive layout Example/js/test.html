@@ -1,0 +1,211 @@
+@using MvcPaging
+@using Telerik.Sitefinity.UI.MVC
+@model IPagedList<Randox_QC.Mvc.Models.BrochuresModel>
+
+
+<div class="row">
+    <h1 class="pageHeading"> Flyers</h1>
+    <div class="dividerGrey"> </div>
+</div>
+
+@using (@Html.BeginFormSitefinity())
+{
+    int currentIndex = 0;
+    <input type="hidden" id="currentPageIndex" value='@ViewData["currentPageIndex"]' />
+    
+    
+    while (currentIndex < Model.Count)
+    {
+    int count = currentIndex + 6;
+    if (count > Model.Count)
+    {
+    count = Model.Count;
+}
+<div class="row kitInserts top20">
+
+
+    @for (int i = currentIndex; i < count; i++)
+    {
+    Randox_QC.Mvc.Models.BrochuresModel item = Model[i];
+    
+    <div class="col-lg-2 col-md-2 col-xs-6 box">
+        <div class="kitResult">
+            @foreach(Randox_QC.Mvc.Models.BrochuresDoc doc in item.Documents)
+            {
+            <a target="_blank" href="@doc.Link">
+              <img src="@item.Thumb" class="img-responsive" alt="">
+              <div class="clearfix"></div>
+              
+              <br>
+
+              
+
+              <a target="_blank" href="@doc.Link" class="bold">@doc.Title</a>
+              
+              
+              
+          </a>
+      }
+  </div><!-- kitResult -->
+  <a  target="_blank"  class="orange bold textCentered top10">
+    @item.DocName
+    
+</a>                   
+</div>                      
+}
+
+
+
+</div>
+
+currentIndex +=6;
+}
+
+<div class="pager">
+    @Html.Raw(Html.Pager(
+    new Options
+    {
+    PageSize = Model.PageSize,
+    TotalItemCount = Model.TotalItemCount,
+    CurrentPage = 1,
+    ItemTexts = new ItemTexts() { Next = "Next", Previous = "Previous" },
+    ItemIcon = new ItemIcon() { First = "icon-backward", Previous = "icon-chevron-left", Next = "icon-chevron-right", Last = "icon-forward" },
+    TooltipTitles = new TooltipTitles() { Next = "Next page {0}", Previous = "Previous page {0}", Page = "Go to page {0}" },
+    Size = Size.normal,
+    Alignment = Alignment.centered,
+    IsShowControls = true,
+    IsShowFirstLast = true,
+    IsShowPages = true
+}, new { controller = "FlyersController", action = "Index" }))
+</div>
+
+}     
+
+<script type="text/javascript">
+
+var firstLoad = true;
+
+$(document).ready(function () {
+        //return;
+
+        var url = window.location.href;
+
+
+
+        var currentPage = parseInt($("#currentPageIndex").attr("value"));
+
+
+        $(".pager div:first-child").removeClass("pagination");
+        $(".pager div:first-child").removeClass("pagination-normal");
+        $(".pager div:first-child").removeClass("pagination-centered");
+
+        $(".pager div:first-child").addClass("col-md-12");
+
+        $(".pager ul:first-child").addClass("pagination pull-right");
+
+        $(".pager").find("li").each(function (index) {
+
+            $(this).removeClass("active");
+
+            if (index == 0) {
+                $(this).html($(this).html().replace("First", "«"));
+                $(this).removeClass("first");
+                $(this).html("<a href='/resources/flyers'>«</a>");
+
+                if (currentPage == 1) {
+                    $(this).addClass("disabled");
+
+                }
+            }
+            else if (index == 1) {
+                $(this).hide();
+            }
+            else if (index == 2) {
+                $(this).html("<a href='/resources/flyers'>1</a>");
+            }
+            else if ($(this).html().indexOf("Next") > 0) {
+                $(this).hide();
+            }
+            else if ($(this).html().indexOf("Last") > 0) {
+                if ($(this).html().indexOf("<span>") >= 0) {
+                    $(this).html("<a href='#'>" + "»" + "</a>");
+                }
+
+                $(this).html($(this).html().replace("Last", "»"));
+            }
+
+            if (index == currentPage + 1) {
+                $(this).addClass("active");
+                if ($(this).html().indexOf("<span>") >= 0) {
+                    $(this).html("<a href='#'>" + currentPage + "</a>");
+                }
+            }
+
+        });
+
+});
+
+
+
+</script>
+
+<script>
+function headAutocomplete () {
+    var id = "#search";
+    var indexId = "#searchIndexName";
+    var indexName = $(indexId).val();
+    var url = "/Sitefinity/Public/Services/SearchCompletion/AutoCompleteService.svc/GetKeywords?catalogueName=" + indexName;
+    $("#search").autocomplete({
+        minLength: 2,
+        source: url,
+        select: function (event, ui) {
+            if (ui.item) {
+                $('#search').val(ui.item.value);
+            }
+            $('.sb-search-submit').click();
+        }
+    });
+}
+headAutocomplete();
+
+
+
+function searchAutocomplete () {
+    var id = "#inputSearchText";
+    var indexId = "#searchInner1";
+    var indexName = $(indexId).val();
+    var url = "/Sitefinity/Public/Services/SearchCompletion/AutoCompleteService.svc/GetKeywords?catalogueName=" + indexName;
+    $("#inputSearchText").autocomplete({
+        minLength: 2,
+        source: url,
+        select: function (event, ui) {
+            if (ui.item) {
+                $('#inputSearchText').val(ui.item.value);
+            }
+            $('#btnSearch').click();
+        }
+    });
+}
+searchAutocomplete();
+
+
+function analyteAutocomplete () {
+    var id = "#analyteSearch";
+    var indexId = "#analyteSearchAuto";
+    var indexName = $(indexId).val();
+    var url = "/Sitefinity/Public/Services/SearchCompletion/AutoCompleteService.svc/GetKeywords?catalogueName=" + indexName;
+    
+    $("#analyteSearch").autocomplete({
+        minLength: 2,
+        source: url,
+        select: function (event, ui) {
+            if (ui.item) {
+                $('#analyteSearch').val(ui.item.value);
+            }
+            $('#btnSearch').click();
+        }
+    });
+}
+analyteAutocomplete();
+
+</script>

@@ -1,0 +1,78 @@
+<html ng-app>
+<head>
+	<meta charset="UTF-8">
+	<title>Simple Form</title>
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<!-- my styles -->
+	<link rel="stylesheet" href="css/style.css">
+	<!-- my styles -->
+	
+	<!-- angular and jquery -->
+	<script src="http://code.angularjs.org/1.2.6/angular.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-animate.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<!-- angular and jquery --
+	
+	<!-- my js -->
+</head>
+<body ng-app="app">
+	<div class="page {{ pageClass }}" ng-view>
+		<div class="container">
+			<div class="col-md-4 col-md-offset-4 col-xs-12 logoBG">
+				<form name="form" ng-submit="registerUser()" controller novalidate>
+					<legend>Create Account</legend>
+					<div class="form-group">
+						<label for="name">Name</label>
+						<input class="form-control" type="text" id="name" ng-model="newUser.name ;" ng-minlength="2" ng-maxlength="16" required>
+						<span class="glyphicon glyphicon glyphicon-ok"></span>
+						<span class="glyphicon glyphicon glyphicon-remove"></span>
+						<span class="help-block">
+							Name must be between <strong>2</strong> and <strong>16</strong> characters!
+						</span>
+					</div>
+					<div class="form-group">
+						<label for="email">Email</label>
+						<input class="form-control" type="email" id="email" ng-model="newUser.email" required>
+						<span class="glyphicon glyphicon glyphicon-ok"></span>
+						<span class="glyphicon glyphicon glyphicon-remove"></span>
+					</div>
+					<div class="form-group">
+						<label for="password">Password</label>
+						<input class="form-control" type="password" id="password" ng-model="newUser.password" ng-minlength="8" name="passowrd"required>
+						<span class="glyphicon glyphicon glyphicon-ok"></span>
+						<span class="glyphicon glyphicon glyphicon-remove"></span>
+						<span class="help-block">
+							Password must be at least <strong>8</strong> characters!
+						</span>
+					</div>
+					<div class="form-group" ng-class="{ 'has-error' : newUser.email.$invalid && !newUser.email.$pristine }">
+						<label for="checkbox">I accept the <a href="#">Terms of agreement</a>.</label>
+						<input type="checkbox" id="checkbox" ng-model="newUser.terms" value="1" required>
+					</div>
+					<div class="form-group">
+						<button ng-disabled="form.$invalid" ng-click="showDetails = ! showDetails; resetForm(); " class="btn btn-success">
+							Submit
+						</button>
+						<p ng-show="showDetails" class="finished">
+							Thank you for registering, 
+							<strong>{{newUser.name}}</strong>!
+							<span class="clearfix"></span>
+							Please check <a href="mailto:{{newUser.email}}"> {{newUser.email}}</a> 
+							using your new password: <strong>{{newUser.password}}</strong>.
+						</p>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- my js -->
+	<script>
+	$('button').click(function(event) {
+		$('input').val("");
+		$('input').removeClass("ng-dirty").addClass('ng-prestine');
+		$("input , #checkbox , .btn-success").prop('disabled', true);
+	});
+	</script>
+</body>
+</html>
